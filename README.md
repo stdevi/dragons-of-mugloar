@@ -1,5 +1,5 @@
 # Dragons of mugloar
-Description:
-https://dragonsofmugloar.com/
-API:
+Description:  
+https://dragonsofmugloar.com/  
+API:  
 https://dragonsofmugloar.com/doc/#api-Game-StartGame
