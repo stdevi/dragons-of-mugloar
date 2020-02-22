@@ -1,6 +1,7 @@
 package com.stdevi.dragonsofmugloar;
 
 import com.stdevi.dragonsofmugloar.client.GameClient;
+import com.stdevi.dragonsofmugloar.model.Game;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,6 @@ public class GameStartupRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        client.startNewGame();
+        Game game = client.startNewGame();
     }
 }
