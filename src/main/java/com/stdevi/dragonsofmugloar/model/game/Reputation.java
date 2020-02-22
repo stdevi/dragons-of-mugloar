@@ -1,4 +1,4 @@
-package com.stdevi.dragonsofmugloar.model;
+package com.stdevi.dragonsofmugloar.model.game;
 
 import lombok.Data;
 import lombok.ToString;
