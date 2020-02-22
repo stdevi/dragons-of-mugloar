@@ -1,8 +1,10 @@
-package com.stdevi.dragonsofmugloar.client;
+package com.stdevi.dragonsofmugloar.services;
 
 import com.stdevi.dragonsofmugloar.model.Game;
-import com.stdevi.dragonsofmugloar.model.Message;
 import com.stdevi.dragonsofmugloar.model.Reputation;
+import com.stdevi.dragonsofmugloar.model.Task;
+import com.stdevi.dragonsofmugloar.model.TaskResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,16 +18,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class GameClient {
+public class GameService {
 
-    private final RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Value("${rootURL}")
     private String rootURL;
-
-    public GameClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
 
     public Game startNewGame() {
         String url = String.format("%s/game/start", rootURL);
@@ -35,11 +34,7 @@ public class GameClient {
 
         ResponseEntity<Game> response = restTemplate.postForEntity(url, headers, Game.class);
 
-        if (response.getStatusCode().equals(HttpStatus.OK) && response.getBody() != null) {
-            return response.getBody();
-        }
-
-        return null;
+        return response.getStatusCode() == HttpStatus.OK ? response.getBody() : null;
     }
 
     public Reputation getReputation(String gameId) {
@@ -50,21 +45,25 @@ public class GameClient {
 
         ResponseEntity<Reputation> response = restTemplate.postForEntity(url, headers, Reputation.class);
 
-        if (response.getStatusCode().equals(HttpStatus.OK) && response.getBody() != null) {
-            return response.getBody();
-        }
-
-        return null;
+        return response.getStatusCode().equals(HttpStatus.OK) ? response.getBody() : null;
     }
 
-    public List<Message> getMessages(String gameId) {
+    public List<Task> getTasks(String gameId) {
         String url = String.format("%s/%s/messages", rootURL, gameId);
-        ResponseEntity<Message[]> response = restTemplate.getForEntity(url, Message[].class);
+        ResponseEntity<Task[]> response = restTemplate.getForEntity(url, Task[].class);
 
-        if (response.getStatusCode().equals(HttpStatus.OK) && response.getBody() != null) {
-            return new ArrayList<>(Arrays.asList(response.getBody()));
-        }
+        return response.getStatusCode().equals(HttpStatus.OK) &&
+                response.getBody() != null ? new ArrayList<>(Arrays.asList(response.getBody())) : null;
+    }
 
-        return null;
+    public TaskResult solveTask(String gameId, String taskId) {
+        String url = String.format("%s/solve/%s", gameId, taskId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        ResponseEntity<TaskResult> response = restTemplate.postForEntity(url, headers, TaskResult.class);
+
+        return response.getStatusCode().equals(HttpStatus.OK) ? response.getBody() : null;
     }
 }

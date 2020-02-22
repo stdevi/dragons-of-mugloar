@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class Message {
+public class Task {
     private String adId;
     private String message;
     private String reward;
