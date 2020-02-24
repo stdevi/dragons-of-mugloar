@@ -1,10 +1,8 @@
-package com.stdevi.dragonsofmugloar.model.message;
+package com.stdevi.dragonsofmugloar.model.ad;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
-@ToString
 public class AdResult {
     private boolean success;
     private int lives;

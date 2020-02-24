@@ -1,21 +1,35 @@
 package com.stdevi.dragonsofmugloar;
 
-import com.stdevi.dragonsofmugloar.model.Game;
-import com.stdevi.dragonsofmugloar.services.GameService;
-import org.springframework.boot.CommandLineRunner;
+import com.stdevi.dragonsofmugloar.controller.GameController;
+import com.stdevi.dragonsofmugloar.model.game.Game;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.Comparator;
+import java.util.stream.IntStream;
+
 @Component
-public class GameStartupRunner implements CommandLineRunner {
+@Slf4j
+public class GameStartupRunner {
 
-    private final GameService gameService;
+    @Autowired
+    private GameController gameController;
 
-    public GameStartupRunner(GameService client) {
-        this.gameService = client;
+    @PostConstruct
+    public void init() {
+        logGame(IntStream.range(0, 2)
+                .mapToObj(i -> gameController.completeGame())
+                .max(Comparator.comparingInt(Game::getScore))
+                .orElseGet(Game::new));
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-        Game game = gameService.startNewGame();
+    public void logGame(Game game) {
+        log.warn("\uD83D\uDC51Your best game\uD83D\uDC51" +
+                "\nHighest score: " + game.getHighScore() +
+                "\nYour final score: " + game.getScore() +
+                "\nYou final level: " + game.getLevel() +
+                "\nNumber of turns: " + game.getTurn());
     }
 }
