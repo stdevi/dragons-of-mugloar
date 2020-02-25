@@ -3,6 +3,7 @@ package com.stdevi.dragonsofmugloar.controller;
 import com.stdevi.dragonsofmugloar.model.ad.Ad;
 import com.stdevi.dragonsofmugloar.model.ad.AdResult;
 import com.stdevi.dragonsofmugloar.model.game.Game;
+import com.stdevi.dragonsofmugloar.model.game.Reputation;
 import com.stdevi.dragonsofmugloar.model.shop.Purchase;
 import com.stdevi.dragonsofmugloar.service.GameService;
 import com.stdevi.dragonsofmugloar.service.InvestigationService;
@@ -10,9 +11,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Component
 @Data
@@ -28,6 +27,7 @@ public class GameController {
     private ShopController shopController;
 
     private Game game;
+    private Reputation reputation;
     private List<Ad> currentAds;
 
     public Game completeGame() {
@@ -71,6 +71,12 @@ public class GameController {
         updateCurrentAds();
     }
 
+    private void updateReputation() {
+        reputation = investigationService.getReputation(game.getGameId());
+        setReputation(reputation);
+        updateCurrentAds();
+    }
+
     private void updateGame(Purchase purchase) {
         game.setGold(purchase.getGold());
         game.setLives(purchase.getLives());
@@ -90,12 +96,6 @@ public class GameController {
             currentAds = adController.retrieveAds(game.getGameId());
         }
     }
-
-//    private void updateReputation() {
-//        Reputation reputation = investigationService.getReputation(gameState.getGameId());
-//        gameState.setReputation(reputation);
-//        updateCurrentAds(adController.retrieveAds(gameState.getGameId()));
-//    }
 
     private boolean isLevelUpNeeded() {
         return currentAds.get(0).getLevelOfDifficulty() >= 3;

@@ -32,7 +32,7 @@ public class ShopController {
         return purchaseItem(gameId, healingPotionId);
     }
 
-    public List<Item> getAvailableItems(String gameId, int goldLimit) {
+    private List<Item> getAvailableItems(String gameId, int goldLimit) {
         return shopService.getShop(gameId).getItems().stream()
                 .filter(item -> item.getCost() <= goldLimit)
                 .collect(Collectors.toList());

@@ -36,4 +36,12 @@ public class Ad {
                 return AdProbability.Level9.getLevel();
         }
     }
+
+    @Override
+    public String toString() {
+        return message +
+                "reward:" + reward +
+                "expiresIn:" + expiresIn +
+                "probability:" + probability;
+    }
 }

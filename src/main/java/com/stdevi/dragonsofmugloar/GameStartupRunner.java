@@ -19,17 +19,13 @@ public class GameStartupRunner {
 
     @PostConstruct
     public void init() {
-        logGame(IntStream.range(0, 2)
+        logBestScore(IntStream.range(0, 4)
                 .mapToObj(i -> gameController.completeGame())
                 .max(Comparator.comparingInt(Game::getScore))
                 .orElseGet(Game::new));
     }
 
-    public void logGame(Game game) {
-        log.warn("\uD83D\uDC51Your best game\uD83D\uDC51" +
-                "\nHighest score: " + game.getHighScore() +
-                "\nYour final score: " + game.getScore() +
-                "\nYou final level: " + game.getLevel() +
-                "\nNumber of turns: " + game.getTurn());
+    public void logBestScore(Game game) {
+        log.warn("Your best score:" + game.getScore());
     }
 }
